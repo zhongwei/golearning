@@ -6,6 +6,7 @@ import (
 	"math"
 	"crypto/sha256"
 	"fmt"
+
 )
 
 type ProofOfWork struct {
