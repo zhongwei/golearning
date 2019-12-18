@@ -1,11 +1,11 @@
 package main
 
 import (
-	"math/big"
 	"bytes"
-	"math"
 	"crypto/sha256"
 	"fmt"
+	"math"
+	"math/big"
 
 )
 
@@ -15,33 +15,34 @@ type ProofOfWork struct {
 	target *big.Int
 }
 
-const targetBits = 24
+const targetBits = 16
 
 func NewProofOfWork(block *Block) *ProofOfWork {
 	target := big.NewInt(1)
-	target.Lsh(target, uint(256 - targetBits))
+	target.Lsh(target, uint(256-targetBits))
 	pow := ProofOfWork{block: block, target: target}
 	return &pow
 }
 
-func (pow *ProofOfWork)PrepareData(nonce int64)[]byte {
+func (pow *ProofOfWork) PrepareData(nonce int64) []byte {
 	block := pow.block
 
-	tmp := [][]byte {
+	tmp := [][]byte{
 		IntToByte(block.Version),
 		block.PrevBlockHash,
 		block.MerkelRoot,
 		IntToByte(block.TimeStamp),
 		IntToByte(targetBits),
 		IntToByte(nonce),
-		block.Data,
+		//		block.Transactions.TransactionHash(),
+		//	block.Data,
 	}
 
 	data := bytes.Join(tmp, []byte{})
 	return data
 }
 
-func (pow *ProofOfWork)Run() (int64, []byte) {
+func (pow *ProofOfWork) Run() (int64, []byte) {
 	var hash [32]byte
 	var nonce int64 = 0
 	var hashInt big.Int
@@ -66,7 +67,7 @@ func (pow *ProofOfWork)Run() (int64, []byte) {
 	return nonce, hash[:]
 }
 
-func (pow *ProofOfWork)IsValid() bool {
+func (pow *ProofOfWork) IsValid() bool {
 	var hashInt big.Int
 
 	data := pow.PrepareData(pow.block.Nonce)

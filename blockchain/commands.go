@@ -5,8 +5,8 @@ import (
 )
 
 func (cli *CLI) AddBlock(data string) {
-	bc := GetBlockChainHandler()
-	bc.AddBlock(data)
+	// bc := GetBlockChainHandler()
+	// bc.AddBlock(data)
 }
 
 func (cli *CLI) PrintChain() {
@@ -22,7 +22,7 @@ func (cli *CLI) PrintChain() {
 		fmt.Printf("TimeStamp: %d\n", block.TimeStamp)
 		fmt.Printf("Bits: %d\n", block.Bits)
 		fmt.Printf("Nonce: %d\n", block.Nonce)
-		fmt.Printf("Data: %s\n", block.Data)
+		//	fmt.Printf("Data: %s\n", block.Data)
 		fmt.Printf("IsValid: %v\n", NewProofOfWork(block).IsValid())
 
 		if len(block.PrevBlockHash) == 0 {
@@ -33,7 +33,30 @@ func (cli *CLI) PrintChain() {
 }
 
 func (cli *CLI) CreateChain(address string) {
-	bc := InitBlockChain()
+	bc := InitBlockChain(address)
 	defer bc.db.Close()
 	fmt.Println("Initialize blockchain successfully!")
+}
+
+func (cli *CLI) GetBalance(address string) {
+	bc := GetBlockChainHandler()
+	defer bc.db.Close()
+	utxos := bc.FindUTXO(address)
+
+	var total float64 = 0.0
+
+	for _, utxo := range utxos {
+		total += utxo.Value
+	}
+
+	fmt.Printf("The balance of %s is %f\n", address, total)
+}
+
+func (cli *CLI) Send(from, to string, amount float64) {
+	bc := GetBlockChainHandler()
+	defer bc.db.Close()
+
+	tx := NewTransaction(from, to, amount, bc)
+	bc.AddBlock([]*Transaction{tx})
+	fmt.Println("send successfully!")
 }

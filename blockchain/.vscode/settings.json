@@ -2,6 +2,10 @@
     "cSpell.words": [
         "Deserialize",
         "Merkel",
+        "TXID",
+        "UTXO",
+        "UTXOs",
+        "Vout",
         "bbolt",
         "etcd"
     ]
