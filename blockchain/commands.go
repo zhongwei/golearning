@@ -4,11 +4,6 @@ import (
 	"fmt"
 )
 
-func (cli *CLI) AddBlock(data string) {
-	// bc := GetBlockChainHandler()
-	// bc.AddBlock(data)
-}
-
 func (cli *CLI) PrintChain() {
 	bc := GetBlockChainHandler()
 	it := bc.NewIterator()
@@ -22,7 +17,6 @@ func (cli *CLI) PrintChain() {
 		fmt.Printf("TimeStamp: %d\n", block.TimeStamp)
 		fmt.Printf("Bits: %d\n", block.Bits)
 		fmt.Printf("Nonce: %d\n", block.Nonce)
-		//	fmt.Printf("Data: %s\n", block.Data)
 		fmt.Printf("IsValid: %v\n", NewProofOfWork(block).IsValid())
 
 		if len(block.PrevBlockHash) == 0 {

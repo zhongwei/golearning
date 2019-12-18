@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"crypto/sha256"
 	"encoding/gob"
 	"time"
 )
@@ -70,4 +71,17 @@ func NewBlock(txs []*Transaction, prevBlockHash []byte) *Block {
 
 func NewGenesisBlock(coinbase *Transaction) *Block {
 	return NewBlock([]*Transaction{coinbase}, []byte{})
+}
+
+func (block *Block) HashTransaction() []byte {
+	var txHashes [][]byte
+	txs := block.Transactions
+
+	for _, tx := range txs {
+		txHashes = append(txHashes, tx.TXID)
+	}
+
+	data := bytes.Join(txHashes, []byte{})
+	hash := sha256.Sum256(data)
+	return hash[:]
 }

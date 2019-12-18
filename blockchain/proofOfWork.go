@@ -26,7 +26,7 @@ func NewProofOfWork(block *Block) *ProofOfWork {
 
 func (pow *ProofOfWork) PrepareData(nonce int64) []byte {
 	block := pow.block
-
+	copy(block.MerkelRoot, block.HashTransaction())
 	tmp := [][]byte{
 		IntToByte(block.Version),
 		block.PrevBlockHash,
@@ -34,8 +34,6 @@ func (pow *ProofOfWork) PrepareData(nonce int64) []byte {
 		IntToByte(block.TimeStamp),
 		IntToByte(targetBits),
 		IntToByte(nonce),
-		//		block.Transactions.TransactionHash(),
-		//	block.Data,
 	}
 
 	data := bytes.Join(tmp, []byte{})
